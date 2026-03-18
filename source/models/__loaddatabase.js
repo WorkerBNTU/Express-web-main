@@ -21,12 +21,30 @@ const scTodo = new Schema({
         index: true
     }
 }, {
-    versionKey: false
+    versionKey: false,
+    statics: {
+        async findOneAndSetDone(id, user) {
+            const todo = await this.findOne({ _id: id, user: user });
+            if (todo) await todo.setDone();
+            return todo
+        }
+    },
+    query: {
+        contains(val) {
+            return this.or([
+                { title: new RegExp(val, "i")},
+                { desc: new RegExp(val, "i")},
+            ])
+        }
+    }
 }
 );
 
 scTodo.index({ done: 1, createdAt: 1})
-
+scTodo.method("setDone", async function () {
+    this.done = true;
+    await this.save()
+})
 
 const scUser = new Schema({
     username: {
@@ -41,4 +59,4 @@ const scUser = new Schema({
 
 await connect(uri, { dbName: dbname });
 export const Todo = model("Todo", scTodo);
-export const User = model("Todo", scUser);
+export const User = model("User", scUser);

@@ -67,7 +67,7 @@ export async function add(req, res, next) {
 export async function setDone(req, res, next) {
   try {
     if (await setDoneItem(req.params.id, req.user.id)) {
-      res.redirect(req.baseUrl);
+      res.redirect("back");
     } else {
       throw createError(404, "Запрошенное дело не существует")
     }
@@ -84,7 +84,7 @@ export async function remove(req, res, next) {
     
     if (t.addendum)
       await rm(join(currentDir, "storage", "uploaded", t.addendum));
-    res.redirect(req.baseUrl);
+    res.redirect("back");
   } catch (err) {
     next(err)
   }

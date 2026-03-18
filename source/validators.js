@@ -72,30 +72,30 @@ const loginV = [
     }),
 ];
 
-const removeAccountV = [
-  body("password")
-    .notEmpty()
-    .isString()
-    .trim()
-    .withMessage("Не указан пароль")
-    .custom(async (value, { req }) => {
-      if (req.user) {
-        const deleteInfo = await getUser(req.user.username);
+// const removeAccountV = [
+//   body("password")
+//     .notEmpty()
+//     .isString()
+//     .trim()
+//     .withMessage("Не указан пароль")
+//     .custom(async (value, { req }) => {
+//       if (req.user) {
+//         const deleteInfo = await getUser(req.user.username);
 
-        const salt = Buffer.from(req.username.salt);
-        const passwordHash = await pbkdf2Promisified(
-          value,
-          salt,
-          100000,
-          32,
-          "sha256"
-        );
-        if (timingSafeEqual(savedPasswordHash, passwordHash)) return true;
-        else throw new Error("Неправильный пароль");
-      } else if (!username) {
-        throw new Error("Не правильно");
-      }
-    }),
-];
+//         const salt = Buffer.from(req.username.salt);
+//         const passwordHash = await pbkdf2Promisified(
+//           value,
+//           salt,
+//           100000,
+//           32,
+//           "sha256"
+//         );
+//         if (timingSafeEqual(savedPasswordHash, passwordHash)) return true;
+//         else throw new Error("Неправильный пароль");
+//       } else if (!username) {
+//         throw new Error("Не правильно");
+//       }
+//     }),
+// ];
 
-export { todoV, registerV, loginV, removeAccountV };
+export { todoV, registerV, loginV };
